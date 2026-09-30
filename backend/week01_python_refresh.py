@@ -19,11 +19,13 @@ courses = [
 enrollments = [
 {"student_id": "22000001", "course_code": "INT2204"}
 ]
+
+#Duyệt dữ liệu và tính giá trị
 for course in courses:
     remaining = course["capacity"] - course["enrolled"]
     print(course["code"], "- con", remaining, "cho")
 
-#    
+# Tách xử lý thành hàm
 def find_course(course_code):
     for course in courses:
         if course["code"] == course_code:
@@ -31,7 +33,7 @@ def find_course(course_code):
     return None
 print(find_course("INT2204"))
 
-#
+# Mô phỏng quy tắc đăng ký
 def can_enroll(student_id, course_code):
     course = find_course(course_code)
     if course is None:
@@ -47,14 +49,14 @@ def can_enroll(student_id, course_code):
     return True, "Co the dang ky"
 print(can_enroll("22000002", "INT2204"))
 
-#
+# Xử lý dữ liệu nhập sai
 try:
     limit = int(input("Nhap so luong hoc phan muon hien thi: "))
     print(courses[:limit])
 except ValueError:
     print("So luong phai la so nguyen")
 
-#
+# Hàm tìm kiếm học phần
 def search_courses(keyword):
     normalized = keyword.strip().lower()
     results = []
@@ -65,3 +67,32 @@ def search_courses(keyword):
             results.append(course)
     return results
 print(search_courses("web"))
+
+# 
+def enroll_student(student_id, course_code):
+    found=False
+    for stu in students:
+        if stu["id"]==student_id:
+            found=True
+            break
+    if not found:
+        return False,"Sinh vien khong ton tai"
+    can_register, message = can_enroll(student_id, course_code)
+    if not can_register:
+        return False, message
+    course = find_course(course_code)
+
+    
+    enrollments.append({
+        "student_id": student_id,
+        "course_code": course_code
+    })
+    course["enrolled"] += 1
+    return True, "Dang ky thanh cong"
+
+print(enroll_student("22000001","INT2204")) #Đăng kí trùng
+print(enroll_student("22000002","INT2204")) #Đăng kí thành công
+
+print(enroll_student("22000001","INT2205")) #Lớp Đầy
+print(enroll_student("22000001","INT2207")) #Mã học phần k tồn tại
+print(enroll_student("22000003","INT2205")) # Mã sv không tồn tại
