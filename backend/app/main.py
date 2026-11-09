@@ -1,5 +1,6 @@
 
 from __future__ import annotations
+from fastapi.middleware.cors import CORSMiddleware
 import logging
 from multiprocessing.dummy import connection
 from fastapi import FastAPI, HTTPException, Query, Response, status
@@ -14,6 +15,18 @@ title="CourseHub API",
 version="0.4.0",
 description="API thuc hanh Buoi 3 - Co so du lieu Web va he thong thong tin",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type"],
+)
+
 class CapacityUpdate(BaseModel):
     capacity: int = Field(gt=0, strict=True)
 @app.get("/")
